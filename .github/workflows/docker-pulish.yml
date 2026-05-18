@@ -12,7 +12,7 @@ env:
 
 jobs:
   build:
-    runs-on: [self-hosted, production]
+    runs-on: [self-hosted, traffico]
     steps:
       - uses: actions/checkout@v4
 
