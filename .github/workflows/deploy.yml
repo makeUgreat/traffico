@@ -59,7 +59,7 @@ jobs:
         with:
           cmd: |
             yq eval -i '
-              .image.tag = "${{ steps.sha.outputs.value }}"
+              .image.tag = "sha-${{ steps.sha.outputs.value }}"
             ' ./deploy/helm/${{ env.IMAGE_NAME }}/values.yaml
 
       - name: Commit and push changes
@@ -69,7 +69,7 @@ jobs:
             🤖 ci(deploy): update ${{ env.IMAGE_NAME }} image tag
 
             - Application: ${{ env.IMAGE_NAME }}
-            - New Tag: ${{ steps.sha.outputs.value }}
+            - New Tag: sha-${{ steps.sha.outputs.value }}
             - Workflow: ${{ github.workflow }}
             - Triggered by: ${{ github.actor }}
             - Build URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
