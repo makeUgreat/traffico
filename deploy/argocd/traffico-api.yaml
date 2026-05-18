@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/makeUgreat/traffico.git
     path: deploy/helm/traffico-api
-    targetRevision: main
+    targetRevision: master
   destination:
     server: https://kubernetes.default.svc
     namespace: traffico
