@@ -1,14 +1,11 @@
 ingress:
   className: ""
   annotations: {}
-  hosts: []
-  #  - host: api.traffico.example.com
-  #    paths:
-  #      - path: /
-  #        pathType: Prefix
-  #        serviceName: traffico-api
-  #        servicePort: 3000
+  hosts:
+    - host: test.hyunjin.kr
+      paths:
+        - path: /
+          pathType: Prefix
+          serviceName: traffico-api
+          servicePort: 3000
   tls: []
-  #  - secretName: traffico-tls
-  #    hosts:
-  #      - api.traffico.example.com
