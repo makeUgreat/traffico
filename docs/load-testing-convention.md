@@ -1,20 +1,23 @@
-# 부하테스트 컨벤션
+# Load Testing Convention
 
-이 프로젝트는 k6를 사용해 부하테스트를 작성한다. 부하테스트는 유닛 테스트나 E2E 테스트처럼 코드의 정확성을 빠르게 검증하는 목적이 아니라, 특정 시나리오에서 트래픽 조건과 성능 한계를 확인하는 목적이다.
+This project uses k6 for load testing.
+Load tests are not meant to quickly verify code correctness like unit or E2E tests. They are used to validate traffic conditions and performance limits for specific scenarios.
 
-## 공통 규칙
+## General Rules
 
-- 부하테스트 파일은 루트의 `load/` 아래에 둔다.
-- `test/`는 Vitest 기반 유닛 테스트와 E2E 테스트만 담당한다.
-- `load/`는 k6 기반 부하테스트, 트래픽 모델, 성능 기준, 인프라 구성과 실행 조건 설명만 담당한다.
-- 애플리케이션 시나리오는 `src/scenarios/` 아래에 둔다.
-- 시나리오 번호는 두 자리 숫자를 사용한다. 예: `00_event_loop`
-- 애플리케이션 시나리오 이름과 부하테스트 대상 그룹 이름을 맞춘다. 예: `src/scenarios/00_event_loop`와 `load/scenarios/00_event_loop`
-- 여러 시나리오가 공유하는 설정, threshold, 환경 변수 처리, helper는 `load/common/`에 둔다.
-- 실제 k6 스크립트는 대상 그룹 아래의 부하 시나리오 디렉터리에 둔다.
-- k6 스크립트가 있는 leaf 디렉터리에는 `README.md`를 두어 무엇을 어떤 조건과 환경에서 테스트하는지 명시한다.
+- Put load testing files under the root `load/` directory.
+- `test/` is only for Vitest unit tests and E2E tests.
+- `load/` is only for k6 load tests, traffic models, performance criteria, infrastructure details, and execution conditions.
+- Put application scenarios under `src/scenarios/`.
+- Use two-digit scenario numbers. Example: `00_event_loop`
+- Match the application scenario name and the load test target group name. Example: `src/scenarios/00_event_loop` and `load/scenarios/00_event_loop`
+- Put shared environment variable handling and helpers under `load/common/`.
+- Define thresholds in each k6 script by default because they may differ by scenario. Move thresholds to `load/common/` only when multiple scripts actually share the same criteria.
+- Put actual k6 scripts under the load scenario directory for the target group.
+- Put a `scenario.md` file in each leaf directory that contains k6 scripts to describe what is tested, under which conditions, and against which criteria.
+- Store load test execution results under `results/` in the same leaf directory, one document per execution.
 
-## 디렉터리 구조
+## Directory Structure
 
 ```txt
 src/
@@ -23,91 +26,72 @@ src/
 
 load/
   common/
-    config.ts
-    thresholds.ts
     env.ts
   scenarios/
     00_event_loop/
-      README.md
       baseline/
-        README.md
+        scenario.md
         smoke.k6.ts
         stress.k6.ts
+        results/
+          2026-05-26-stress.md
       cpu_blocking/
-        README.md
+        scenario.md
         spike.k6.ts
+        results/
+          2026-05-26-spike.md
 ```
 
-## 공통 모듈
+## Common Modules
 
-- `load/common/config.ts`에는 base URL, 기본 k6 옵션, 공통 timeout처럼 여러 시나리오가 공유하는 설정을 둔다.
-- `load/common/thresholds.ts`에는 공통 threshold 또는 threshold 생성 helper를 둔다.
-- `load/common/env.ts`에는 k6 실행 환경 변수 파싱과 기본값 처리를 둔다.
-- 특정 시나리오에만 필요한 설정은 공통 모듈로 올리지 않고 해당 시나리오 디렉터리에 둔다.
+- `load/common/env.ts` contains k6 execution environment variable parsing and defaults.
+- Put helpers that are actually shared across scenarios under `load/common/` with filenames that describe their purpose.
+- Keep scenario-specific configuration inside the relevant scenario directory instead of promoting it to a common module.
 
-## 시나리오 스크립트
+## Scenario Scripts
 
-- 파일명은 실행 목적이 드러나도록 `{purpose}.k6.ts` 형식을 사용한다. 예: `smoke.k6.ts`, `stress.k6.ts`, `spike.k6.ts`
-- k6 스크립트는 `load/scenarios/{target_group}/{load_scenario}/` 아래에 둔다. 예: `load/scenarios/00_event_loop/baseline/smoke.k6.ts`
-- k6 스크립트는 해당 시나리오의 트래픽 모델과 요청 흐름만 표현한다.
-- 공통 URL, header, threshold, 환경 변수 처리는 `load/common/`에서 가져온다.
-- 스크립트 안에는 테스트 의도나 계산 근거를 길게 적지 않고, 자세한 설명은 같은 디렉터리의 `README.md`에 둔다.
+- Use the `{purpose}.k6.ts` filename format so the execution purpose is clear. Examples: `smoke.k6.ts`, `stress.k6.ts`, `spike.k6.ts`
+- Put k6 scripts under `load/scenarios/{target_group}/{load_scenario}/`. Example: `load/scenarios/00_event_loop/baseline/smoke.k6.ts`
+- k6 scripts should express only the traffic model and request flow for the scenario.
+- Import shared environment variable handling from `load/common/env.ts`.
+- Define thresholds directly in each k6 script so the test intent is visible. Use a common helper only when the exact same thresholds are repeated across multiple scripts.
+- Do not put long explanations or calculation rationale in the script. Put detailed context in `scenario.md` in the same directory.
 
-## 시나리오 README
+## Document Roles
 
-각 `load/scenarios/{target_group}/{load_scenario}/README.md`는 최소한 아래 구조를 따른다.
+Separate the responsibilities of `scenario.md` and `results/*.md`.
+`scenario.md` is the test design document that defines what to validate and how to validate it. `results/*.md` is the execution result document that records what actually happened when the test was run.
+If the test design has not changed, do not update `scenario.md` for every run. Add a new result document under `results/` instead.
 
-```md
-# {target_group}/{load_scenario} 부하테스트
+- `scenario.md`: purpose, infrastructure assumptions, test target, Little's Law estimates, traffic conditions, execution command, success criteria, and result interpretation criteria.
+- `results/{YYYY-MM-DD}-{purpose}.md`: execution information, execution environment, k6 results, server metrics, result interpretation, and follow-up actions.
+- `Infrastructure`: load generator, application server, runtime, deployment, external dependencies, network conditions, and observability tools needed to reproduce or compare results.
 
-## 목적
-## 테스트 대상
-## 인프라 구성
-## Little's Law 예상 수치
-## 트래픽 조건
-## 실행 명령
-## 성공 기준
-## 결과 해석 메모
-```
+Do not guess unknown values. Leave them as `needs measurement` or `needs confirmation`.
 
-- `목적`: 어떤 성능 특성이나 병목을 확인하는지 적는다.
-- `테스트 대상`: API, 모듈, 라우트, 대상 endpoint를 명시한다.
-- `인프라 구성`: 테스트 당시의 서버, 컨테이너, CPU, 메모리, replica 수, DB, 캐시, 네트워크처럼 결과에 영향을 줄 수 있는 구성을 적는다.
-- `Little's Law 예상 수치`: `L = λW` 기준으로 목표 처리량, 평균 응답 시간, 예상 동시성 또는 VU 산정 근거를 적는다.
-- `트래픽 조건`: VU, duration, ramping, arrival rate 등 실제 k6 옵션과 Little's Law 계산값의 관계를 적는다.
-- `실행 명령`: 해당 시나리오를 실행하는 명령을 적는다.
-- `성공 기준`: threshold와 기대 응답 상태를 적는다.
-- `결과 해석 메모`: 병목 판단 기준, 관찰할 metric, 주의사항을 적는다.
+## Templates
 
-## Little's Law 예상 수치
+Use these detailed templates when writing documents.
 
-시나리오 README의 `Little's Law 예상 수치` 섹션에는 최소한 아래 값을 포함한다.
+- Scenario document: [load-testing/scenario-template.md](load-testing/scenario-template.md)
+- Result document: [load-testing/result-template.md](load-testing/result-template.md)
+- Infrastructure details: [load-testing/infrastructure-template.md](load-testing/infrastructure-template.md)
 
-```md
-## Little's Law 예상 수치
+## Little's Law Estimates
 
-- 목표 처리량 `λ`: {n} req/s
-- 목표 평균 응답 시간 `W`: {n} ms
-- 예상 동시 처리량 `L = λW`: {n}
-- k6 VU 산정 근거: {계산값과 실제 VU 선택 이유}
-```
+The `Little's Law Estimates` section in `scenario.md` must include at least these values.
 
-예:
+- Target throughput `λ`: `{n} req/s`
+- Target average response time `W`: `{n} ms`
+- Expected concurrency `L = λW`: `{n}`
+- k6 VU sizing rationale: `{calculation and reason for the selected VU count}`
 
-```md
-## Little's Law 예상 수치
+Little's Law is a baseline for estimating load targets.
+Interpret actual results using both k6 metrics and server metrics.
 
-- 목표 처리량 `λ`: 100 req/s
-- 목표 평균 응답 시간 `W`: 200 ms = 0.2 s
-- 예상 동시 처리량 `L = λW`: 100 * 0.2 = 20
-- k6 VU 산정 근거: 이론상 동시성은 20이므로 여유를 두어 30 VU로 시작한다.
-```
+## Execution Commands
 
-Little's Law는 부하 목표를 산정하기 위한 기준값이다. 실제 결과는 k6 metric과 서버 metric을 함께 보고 해석한다.
-
-## 실행 명령
-
-부하테스트 실행 명령은 `package.json`의 script로 추가한다.
+Add load test execution commands as `package.json` scripts.
 
 ```json
 {
@@ -117,14 +101,17 @@ Little's Law는 부하 목표를 산정하기 위한 기준값이다. 실제 결
 }
 ```
 
-시나리오나 실행 목적이 늘어나면 `load:{target_group}:{load_scenario}:{purpose}` 형식으로 추가한다.
+When adding scenarios or execution purposes, use the `load:{target_group}:{load_scenario}:{purpose}` format.
 
-## 구조 체크리스트
+## Structure Checklist
 
-- [ ] 부하테스트는 `load/`, Vitest 테스트는 `test/`로 분리되어 있는가?
-- [ ] 애플리케이션 시나리오가 `src/scenarios/{two_digit_name}/` 형식인가?
-- [ ] k6 스크립트가 `load/scenarios/{target_group}/{load_scenario}/` 아래에 있고, `target_group`이 애플리케이션 시나리오 이름과 대응되는가?
-- [ ] 공통 설정, threshold, 환경 변수 처리가 `load/common/`에 있는가?
-- [ ] k6 스크립트가 있는 leaf 디렉터리에 `README.md`가 있는가?
-- [ ] 시나리오 README에 목적, 테스트 대상, 인프라 구성, Little's Law 예상 수치, 트래픽 조건, 실행 명령, 성공 기준, 결과 해석 메모가 있는가?
-- [ ] Little's Law 예상 수치에 `λ`, `W`, `L = λW`, k6 VU 산정 근거가 있는가?
+- [ ] Are load tests separated under `load/` and Vitest tests under `test/`?
+- [ ] Does each application scenario use the `src/scenarios/{two_digit_name}/` format?
+- [ ] Is each k6 script under `load/scenarios/{target_group}/{load_scenario}/`, and does `target_group` correspond to the application scenario name?
+- [ ] Are shared environment variable handling and actual shared helpers under `load/common/`, and are thresholds defined in scripts according to each test purpose?
+- [ ] Does each leaf directory containing k6 scripts have a `scenario.md`?
+- [ ] Does each scenario document include purpose, test target, infrastructure, Little's Law estimates, traffic conditions, execution command, success criteria, and result interpretation criteria?
+- [ ] Does the infrastructure section include load generator, application server, runtime settings, deployment model, external dependencies, network conditions, and observability tools?
+- [ ] Do Little's Law estimates include `λ`, `W`, `L = λW`, and the k6 VU sizing rationale?
+- [ ] After running a load test, is the result separated into a `results/{YYYY-MM-DD}-{purpose}.md` document?
+- [ ] Does each result document include execution information, execution environment, k6 results, server metrics, result interpretation, and follow-up actions?
