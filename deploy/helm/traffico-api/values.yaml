@@ -1,4 +1,4 @@
-replicaCount: 1
+replicaCount: 8
 image:
   repository: willom2c/traffico-api
   pullPolicy: IfNotPresent
@@ -15,11 +15,21 @@ serviceMonitor:
   interval: 15s
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
     cpu: 500m
-    memory: 256Mi
+    memory: 512Mi
 nodeSelector: {}
 tolerations: []
-affinity: {}
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: NotIn
+              values:
+                - hash-n97-1
+topologySpread:
+  enabled: true
+  maxSkew: 1
+  topologyKey: kubernetes.io/hostname
+  whenUnsatisfiable: DoNotSchedule
