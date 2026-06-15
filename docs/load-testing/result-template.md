@@ -43,8 +43,8 @@ Follow [infrastructure-template.md](infrastructure-template.md) for detailed fie
 
 ### Key Environment Variables
 
-- `BASE_URL`: {value}
-- `K6_TIMEOUT`: {value}
+- `TARGET_BASE_URL`: {value}
+- `LOAD_REQUEST_TIMEOUT`: {value}
 - `{name}`: {value}
 
 ## k6 Results

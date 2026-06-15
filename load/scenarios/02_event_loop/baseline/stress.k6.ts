@@ -3,11 +3,15 @@ import http from 'k6/http';
 import type { Options } from 'k6/options';
 
 import { getEnv } from '../../../common/env.ts';
+import { createTestId, logTestId } from '../../../common/test-id.ts';
 
-const baseUrl = getEnv('BASE_URL', 'http://localhost:3000');
-const defaultTimeout = getEnv('K6_TIMEOUT', '5s');
+const baseUrl = getEnv('TARGET_BASE_URL');
+const requestTimeout = getEnv('LOAD_REQUEST_TIMEOUT');
 
 export const options: Options = {
+  tags: {
+    testid: createTestId(),
+  },
   vus: 50,
   duration: '1m',
   thresholds: {
@@ -15,9 +19,13 @@ export const options: Options = {
   },
 };
 
+export function setup(): void {
+  logTestId();
+}
+
 export default function (): void {
   const response = http.get(`${baseUrl}/event-loop/baseline`, {
-    timeout: defaultTimeout,
+    timeout: requestTimeout,
   });
 
   check(response, {

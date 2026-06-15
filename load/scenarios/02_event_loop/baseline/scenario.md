@@ -8,7 +8,7 @@ CPU blocking 시나리오와 비교할 정상 요청 처리량을 측정한다.
 
 - `GET /event-loop/baseline`
 - 기본 대상 주소: `http://localhost:3000`
-- 대상 주소는 `BASE_URL` 환경 변수로 변경한다.
+- 대상 주소는 `load/.env`의 `TARGET_BASE_URL`로 변경한다.
 - 정상 응답 body는 CPU blocking API와 동일한 `{"status":"ok"}`로 유지한다.
 
 ## 인프라 구성
@@ -35,7 +35,8 @@ CPU blocking 시나리오와 비교할 정상 요청 처리량을 측정한다.
 
 ```bash
 k6 version
-BASE_URL=http://localhost:3000 pnpm load:02_event_loop:baseline:stress
+cp load/.env.example load/.env
+pnpm load:02_event_loop:baseline:stress
 ```
 
 ## 성공 기준
