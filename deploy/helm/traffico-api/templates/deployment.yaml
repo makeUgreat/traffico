@@ -53,6 +53,10 @@ spec:
           labelSelector:
             matchLabels:
               {{- include "traffico-api.selectorLabels" $ | nindent 14 }}
+          {{- with .matchLabelKeys }}
+          matchLabelKeys:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- end }}
       {{- end }}
       {{- with .Values.tolerations }}
