@@ -10,7 +10,7 @@
 
 - 기본 대상 API: `GET /node-capacity-limit/baseline`
 - 기본 대상 주소: `http://localhost:3000`
-- 대상 주소는 `BASE_URL` 환경 변수로 변경한다.
+- 대상 주소는 `load/.env`의 `TARGET_BASE_URL`로 변경한다.
 
 ## 인프라 구성
 
@@ -22,36 +22,47 @@
 
 ## Little's Law 예상 수치
 
-- 목표 처리량 `λ`: 기본 최대 2000 req/s
+- 목표 처리량 `λ`: 기본 최대 20000 req/s
 - 목표 평균 응답 시간 `W`: 100 ms = 0.1 s
-- 예상 동시 처리량 `L = λW`: 2000 \* 0.1 = 200
-- k6 VU 산정 근거: 목표 최대 2000 req/s와 p95 100 ms 기준 이론상 동시성은 약 200이므로 pre-allocated VU를 200으로 둔다. latency가 상승하는 구간에서도 부하 발생기가 먼저 막히지 않도록 max VU는 2000으로 둔다.
+- 예상 동시 처리량 `L = λW`: 20000 \* 0.1 = 2000
+- k6 VU 산정 근거: 목표 최대 20000 req/s와 p95 100 ms 기준 이론상 동시성은 약 2000이다. 짧은 시간 동안 Node 자체 처리량 한계 근처를 찾는 목적이므로 pre-allocated VU를 500으로 두고, latency가 상승하는 구간에서도 부하 발생기가 먼저 막히지 않도록 max VU는 5000으로 둔다.
 
 ## 트래픽 조건
 
 - executor: `ramping-arrival-rate`
-- 시작 rate: 100 req/s
-- 중간 rate: 500 req/s
-- 높은 rate: 1000 req/s
-- 최대 rate: 2000 req/s
+- 시나리오 이름: `node_max_throughput`
+- rate stages: 1000, 5000, 10000, 15000, 20000 req/s
+- 최대 rate: 20000 req/s
 - stage duration: 1m
+- 총 실행 시간: 5m
 - time unit: 1s
-- pre-allocated VU: 200
-- max VU: 2000
+- pre-allocated VU: 500
+- max VU: 5000
 
 ## 실행 명령
 
 ```bash
 k6 version
-BASE_URL=http://localhost:3000 pnpm load:01_node_capacity_limit:tps_ramp:stress
+cp load/.env.example load/.env
+pnpm load:01_node_capacity_limit:tps_ramp:stress
 ```
 
-목표 TPS를 더 크게 올리는 테스트는 별도 k6 스크립트 또는 별도 시나리오로 추가한다.
+실행 설정은 `load/.env`에서 읽는다.
+실행할 때마다 k6 `handleSummary()`가 k6 summary JSON과 Prometheus 리소스 통계 JSON을 함께 저장한다.
+Grafana 필터에 사용할 k6 `testid`는 실행 시 UUID로 자동 생성되며 결과 JSON의 `test.testid`에 기록된다.
+
+- k6 summary: `results/{YYYY-MM-DD-HHMMSS}-stress.json`
+- Prometheus resources: `results/{YYYY-MM-DD-HHMMSS}-stress.resources.json`
+
+Prometheus label 값은 `load/.env`의 `PROMETHEUS_NAMESPACE`, `PROMETHEUS_JOB`, `PROMETHEUS_POD_REGEX`로 변경한다.
+
+목표 TPS를 더 크게 올리는 테스트는 별도 k6 스크립트 또는 별도 시나리오로 추가한다. 최대 처리량 판정은 에러율, p95 latency, k6 `dropped_iterations`, 서버 CPU/event loop lag를 함께 보고 안정적으로 유지되는 가장 높은 req/s 구간으로 잡는다.
 
 ## 성공 기준
 
 - `http_req_failed` rate < 0.01
 - `http_req_duration` p95 < 1000 ms
+- threshold 실패 여부는 최종 결과에서 확인하며, 실패해도 남은 stage는 계속 진행한다.
 - 대상 API 응답 status가 200이다.
 - k6 `dropped_iterations`가 먼저 증가하지 않아야 서버 병목으로 해석할 수 있다.
 

@@ -1,0 +1,872 @@
+{
+  "schemaVersion": 1,
+  "test": {
+    "testid": "5dc0a579-42ee-4b59-a5aa-b99259640215",
+    "scriptPath": "load/scenarios/01_node_capacity_limit/tps_ramp/stress.k6.ts",
+    "purpose": "stress",
+    "startedAt": "2026-06-15T08:01:09.167Z",
+    "endedAt": "2026-06-15T08:06:14.169Z",
+    "durationMs": 305001.958,
+    "summaryJsonPath": "load/scenarios/01_node_capacity_limit/tps_ramp/results/2026-06-15T08-06-14-169Z-stress.json"
+  },
+  "prometheus": {
+    "url": "http://10.8.0.1:39090",
+    "step": "15s",
+    "namespace": "traffico",
+    "job": "traffico-api",
+    "podRegex": "traffico-api.*"
+  },
+  "metrics": [
+    {
+      "name": "eventLoopP99",
+      "unit": "seconds",
+      "query": "nodejs_eventloop_lag_p99_seconds{namespace=\"traffico\",job=\"traffico-api\"}",
+      "status": "ok",
+      "series": [
+        {
+          "labels": {
+            "__name__": "nodejs_eventloop_lag_p99_seconds",
+            "container": "traffico-api",
+            "endpoint": "http",
+            "instance": "10.42.2.125:3000",
+            "job": "traffico-api",
+            "namespace": "traffico",
+            "pod": "traffico-api-d9874c7c8-lk6l7",
+            "service": "traffico-api"
+          },
+          "values": [
+            {
+              "timestamp": 1781510469,
+              "value": 0.010313727
+            },
+            {
+              "timestamp": 1781510484,
+              "value": 0.010575871
+            },
+            {
+              "timestamp": 1781510499,
+              "value": 0.011083775
+            },
+            {
+              "timestamp": 1781510514,
+              "value": 0.011116543
+            },
+            {
+              "timestamp": 1781510529,
+              "value": 0.011051007
+            },
+            {
+              "timestamp": 1781510544,
+              "value": 0.011051007
+            },
+            {
+              "timestamp": 1781510559,
+              "value": 0.011108351
+            },
+            {
+              "timestamp": 1781510574,
+              "value": 0.013975551
+            },
+            {
+              "timestamp": 1781510589,
+              "value": 0.032473087
+            },
+            {
+              "timestamp": 1781510604,
+              "value": 0.056852479
+            },
+            {
+              "timestamp": 1781510619,
+              "value": 0.125632511
+            },
+            {
+              "timestamp": 1781510634,
+              "value": 0.052887551
+            },
+            {
+              "timestamp": 1781510649,
+              "value": 0.012828671
+            },
+            {
+              "timestamp": 1781510664,
+              "value": 0.011075583
+            },
+            {
+              "timestamp": 1781510679,
+              "value": 0.021381119
+            },
+            {
+              "timestamp": 1781510694,
+              "value": 0.102301695
+            },
+            {
+              "timestamp": 1781510709,
+              "value": 0.043188223
+            },
+            {
+              "timestamp": 1781510724,
+              "value": 0.011829247
+            },
+            {
+              "timestamp": 1781510739,
+              "value": 0.013582335
+            },
+            {
+              "timestamp": 1781510754,
+              "value": 0.078118911
+            },
+            {
+              "timestamp": 1781510769,
+              "value": 0.063340543
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "sampleCount": 21,
+        "avg": 0.03408418033333333,
+        "p95": 0.102301695,
+        "max": 0.125632511,
+        "last": 0.063340543
+      }
+    },
+    {
+      "name": "processCpu",
+      "unit": "cores",
+      "query": "sum(rate(process_cpu_seconds_total{namespace=\"traffico\",job=\"traffico-api\"}[1m]))",
+      "status": "ok",
+      "series": [
+        {
+          "labels": {},
+          "values": [
+              {
+                "timestamp": 1781510469,
+                "value": 0.009845666666665743
+              },
+              {
+                "timestamp": 1781510484,
+                "value": 0.011203800000000935
+              },
+              {
+                "timestamp": 1781510499,
+                "value": 0.04701715555555791
+              },
+              {
+                "timestamp": 1781510514,
+                "value": 0.11291162222222635
+              },
+              {
+                "timestamp": 1781510529,
+                "value": 0.18296724444444912
+              },
+              {
+                "timestamp": 1781510544,
+                "value": 0.23344017777778084
+              },
+              {
+                "timestamp": 1781510559,
+                "value": 0.2967390444444441
+              },
+              {
+                "timestamp": 1781510574,
+                "value": 0.38110802222221934
+              },
+              {
+                "timestamp": 1781510589,
+                "value": 0.4536280222222204
+              },
+              {
+                "timestamp": 1781510604,
+                "value": 0.4829755555555544
+              },
+              {
+                "timestamp": 1781510619,
+                "value": 0.48651333333333335
+              },
+              {
+                "timestamp": 1781510634,
+                "value": 0.4245861295053547
+              },
+              {
+                "timestamp": 1781510649,
+                "value": 0.28869738245489485
+              },
+              {
+                "timestamp": 1781510664,
+                "value": 0.14218457777777882
+              },
+              {
+                "timestamp": 1781510679,
+                "value": 0.0918803884099223
+              },
+              {
+                "timestamp": 1781510694,
+                "value": 0.1765418120402678
+              },
+              {
+                "timestamp": 1781510709,
+                "value": 0.23590743045062815
+              },
+              {
+                "timestamp": 1781510724,
+                "value": 0.21010952084629647
+              },
+              {
+                "timestamp": 1781510739,
+                "value": 0.13454041021310564
+              },
+              {
+                "timestamp": 1781510754,
+                "value": 0.13491348888888852
+              },
+              {
+                "timestamp": 1781510769,
+                "value": 0.2026294386916118
+              }
+            ]
+        }
+      ],
+      "summary": {
+        "sampleCount": 21,
+        "avg": 0.22573048684396196,
+        "p95": 0.4829755555555544,
+        "max": 0.48651333333333335,
+        "last": 0.2026294386916118
+      }
+    },
+    {
+      "name": "podCpu",
+      "unit": "cores",
+      "query": "sum(rate(container_cpu_usage_seconds_total{namespace=\"traffico\",pod=~\"traffico-api.*\",container!=\"POD\",container!=\"\"}[1m])) by (pod)",
+      "status": "ok",
+      "series": [
+        {
+          "labels": {
+            "pod": "traffico-api-d9874c7c8-lk6l7"
+          },
+          "values": [
+            {
+              "timestamp": 1781510469,
+              "value": 0.009843185119430886
+            },
+            {
+              "timestamp": 1781510484,
+              "value": 0.029074642809456052
+            },
+            {
+              "timestamp": 1781510499,
+              "value": 0.08163936309264466
+            },
+            {
+              "timestamp": 1781510514,
+              "value": 0.10663482895474335
+            },
+            {
+              "timestamp": 1781510529,
+              "value": 0.21924619334277676
+            },
+            {
+              "timestamp": 1781510544,
+              "value": 0.2534972169327631
+            },
+            {
+              "timestamp": 1781510559,
+              "value": 0.2783037061265005
+            },
+            {
+              "timestamp": 1781510574,
+              "value": 0.33489453340289554
+            },
+            {
+              "timestamp": 1781510589,
+              "value": 0.46871691696661216
+            },
+            {
+              "timestamp": 1781510604,
+              "value": 0.4856279624417191
+            },
+            {
+              "timestamp": 1781510619,
+              "value": 0.4789952652489859
+            },
+            {
+              "timestamp": 1781510634,
+              "value": 0.37536268095901343
+            },
+            {
+              "timestamp": 1781510649,
+              "value": 0.21759446056139353
+            },
+            {
+              "timestamp": 1781510664,
+              "value": 0.11412832963101159
+            },
+            {
+              "timestamp": 1781510679,
+              "value": 0.11821062864549481
+            },
+            {
+              "timestamp": 1781510694,
+              "value": 0.2341793183212956
+            },
+            {
+              "timestamp": 1781510709,
+              "value": 0.250326217137291
+            },
+            {
+              "timestamp": 1781510724,
+              "value": 0.17518279090503955
+            },
+            {
+              "timestamp": 1781510739,
+              "value": 0.11804298843758981
+            },
+            {
+              "timestamp": 1781510754,
+              "value": 0.1757358135963134
+            },
+            {
+              "timestamp": 1781510769,
+              "value": 0.2138349249110361
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "sampleCount": 21,
+        "avg": 0.22567009369257174,
+        "p95": 0.4789952652489859,
+        "max": 0.4856279624417191,
+        "last": 0.2138349249110361
+      }
+    },
+    {
+      "name": "cpuThrottlingRatio",
+      "unit": "ratio",
+      "query": "sum(rate(container_cpu_cfs_throttled_periods_total{namespace=\"traffico\",pod=~\"traffico-api.*\",container!=\"POD\",container!=\"\"}[1m])) by (pod) / sum(rate(container_cpu_cfs_periods_total{namespace=\"traffico\",pod=~\"traffico-api.*\",container!=\"POD\",container!=\"\"}[1m])) by (pod)",
+      "status": "ok",
+      "series": [
+        {
+          "labels": {
+            "pod": "traffico-api-d9874c7c8-lk6l7"
+          },
+          "values": [
+            {
+              "timestamp": 1781510469,
+              "value": 0
+            },
+            {
+              "timestamp": 1781510484,
+              "value": 0
+            },
+            {
+              "timestamp": 1781510499,
+              "value": 0.00992063492063492
+            },
+            {
+              "timestamp": 1781510514,
+              "value": 0.01639344262295082
+            },
+            {
+              "timestamp": 1781510529,
+              "value": 0.011061946902654865
+            },
+            {
+              "timestamp": 1781510544,
+              "value": 0
+            },
+            {
+              "timestamp": 1781510559,
+              "value": 0.014880952380952382
+            },
+            {
+              "timestamp": 1781510574,
+              "value": 0.07912087912087912
+            },
+            {
+              "timestamp": 1781510589,
+              "value": 0.3002481389578164
+            },
+            {
+              "timestamp": 1781510604,
+              "value": 0.4623655913978495
+            },
+            {
+              "timestamp": 1781510619,
+              "value": 0.5946502057613169
+            },
+            {
+              "timestamp": 1781510634,
+              "value": 0.46946564885496184
+            },
+            {
+              "timestamp": 1781510649,
+              "value": 0.2882352941176471
+            },
+            {
+              "timestamp": 1781510664,
+              "value": 0.09037328094302555
+            },
+            {
+              "timestamp": 1781510679,
+              "value": 0.11270983213429256
+            },
+            {
+              "timestamp": 1781510694,
+              "value": 0.2624113475177305
+            },
+            {
+              "timestamp": 1781510709,
+              "value": 0.28117359413202936
+            },
+            {
+              "timestamp": 1781510724,
+              "value": 0.16170212765957445
+            },
+            {
+              "timestamp": 1781510739,
+              "value": 0.07534246575342465
+            },
+            {
+              "timestamp": 1781510754,
+              "value": 0.13765182186234817
+            },
+            {
+              "timestamp": 1781510769,
+              "value": 0.15725806451612903
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "sampleCount": 21,
+        "avg": 0.16785548902648656,
+        "p95": 0.46946564885496184,
+        "max": 0.5946502057613169,
+        "last": 0.15725806451612903
+      }
+    },
+    {
+      "name": "memoryWorkingSet",
+      "unit": "bytes",
+      "query": "sum(container_memory_working_set_bytes{namespace=\"traffico\",pod=~\"traffico-api.*\",container!=\"POD\",container!=\"\"}) by (pod)",
+      "status": "ok",
+      "series": [
+        {
+          "labels": {
+            "pod": "traffico-api-d9874c7c8-lk6l7"
+          },
+          "values": [
+            {
+              "timestamp": 1781510469,
+              "value": 87318528
+            },
+            {
+              "timestamp": 1781510484,
+              "value": 87400448
+            },
+            {
+              "timestamp": 1781510499,
+              "value": 88334336
+            },
+            {
+              "timestamp": 1781510514,
+              "value": 88334336
+            },
+            {
+              "timestamp": 1781510529,
+              "value": 90759168
+            },
+            {
+              "timestamp": 1781510544,
+              "value": 92164096
+            },
+            {
+              "timestamp": 1781510559,
+              "value": 94965760
+            },
+            {
+              "timestamp": 1781510574,
+              "value": 95047680
+            },
+            {
+              "timestamp": 1781510589,
+              "value": 96575488
+            },
+            {
+              "timestamp": 1781510604,
+              "value": 99528704
+            },
+            {
+              "timestamp": 1781510619,
+              "value": 157462528
+            },
+            {
+              "timestamp": 1781510634,
+              "value": 116973568
+            },
+            {
+              "timestamp": 1781510649,
+              "value": 113942528
+            },
+            {
+              "timestamp": 1781510664,
+              "value": 116252672
+            },
+            {
+              "timestamp": 1781510679,
+              "value": 122097664
+            },
+            {
+              "timestamp": 1781510694,
+              "value": 126414848
+            },
+            {
+              "timestamp": 1781510709,
+              "value": 117608448
+            },
+            {
+              "timestamp": 1781510724,
+              "value": 114593792
+            },
+            {
+              "timestamp": 1781510739,
+              "value": 115519488
+            },
+            {
+              "timestamp": 1781510754,
+              "value": 118407168
+            },
+            {
+              "timestamp": 1781510769,
+              "value": 110567424
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "sampleCount": 21,
+        "avg": 107155651.04761904,
+        "p95": 126414848,
+        "max": 157462528,
+        "last": 110567424
+      }
+    },
+    {
+      "name": "networkReceive",
+      "unit": "bytes_per_second",
+      "query": "sum(rate(container_network_receive_bytes_total{namespace=\"traffico\",pod=~\"traffico-api.*\"}[1m])) by (pod)",
+      "status": "ok",
+      "series": [
+        {
+          "labels": {
+            "pod": "traffico-api-d9874c7c8-lk6l7"
+          },
+          "values": [
+            {
+              "timestamp": 1781510469,
+              "value": 216.0570430978272
+            },
+            {
+              "timestamp": 1781510484,
+              "value": 5720.605963192156
+            },
+            {
+              "timestamp": 1781510499,
+              "value": 31537.511577647423
+            },
+            {
+              "timestamp": 1781510514,
+              "value": 74558.39416058394
+            },
+            {
+              "timestamp": 1781510529,
+              "value": 174525.06462702874
+            },
+            {
+              "timestamp": 1781510544,
+              "value": 262223.4396996715
+            },
+            {
+              "timestamp": 1781510559,
+              "value": 416543.0818734358
+            },
+            {
+              "timestamp": 1781510574,
+              "value": 791591.2727272727
+            },
+            {
+              "timestamp": 1781510589,
+              "value": 1164276.5878354455
+            },
+            {
+              "timestamp": 1781510604,
+              "value": 1534375.8213133237
+            },
+            {
+              "timestamp": 1781510619,
+              "value": 1665262.7319577527
+            },
+            {
+              "timestamp": 1781510634,
+              "value": 1046160.8965513302
+            },
+            {
+              "timestamp": 1781510649,
+              "value": 586488.3012400924
+            },
+            {
+              "timestamp": 1781510664,
+              "value": 163254.04368487597
+            },
+            {
+              "timestamp": 1781510679,
+              "value": 323146.3021768144
+            },
+            {
+              "timestamp": 1781510694,
+              "value": 602946.9896750547
+            },
+            {
+              "timestamp": 1781510709,
+              "value": 684787.2277743785
+            },
+            {
+              "timestamp": 1781510724,
+              "value": 425321.47557078104
+            },
+            {
+              "timestamp": 1781510739,
+              "value": 239149.64479064348
+            },
+            {
+              "timestamp": 1781510754,
+              "value": 457360.40662334947
+            },
+            {
+              "timestamp": 1781510769,
+              "value": 604100.7295312269
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "sampleCount": 21,
+        "avg": 535883.1707808094,
+        "p95": 1534375.8213133237,
+        "max": 1665262.7319577527,
+        "last": 604100.7295312269
+      }
+    },
+    {
+      "name": "networkTransmit",
+      "unit": "bytes_per_second",
+      "query": "sum(rate(container_network_transmit_bytes_total{namespace=\"traffico\",pod=~\"traffico-api.*\"}[1m])) by (pod)",
+      "status": "ok",
+      "series": [
+        {
+          "labels": {
+            "pod": "traffico-api-d9874c7c8-lk6l7"
+          },
+          "values": [
+            {
+              "timestamp": 1781510469,
+              "value": 991.2920934732767
+            },
+            {
+              "timestamp": 1781510484,
+              "value": 4521.919954994776
+            },
+            {
+              "timestamp": 1781510499,
+              "value": 22335.882394851214
+            },
+            {
+              "timestamp": 1781510514,
+              "value": 51517.48980946061
+            },
+            {
+              "timestamp": 1781510529,
+              "value": 119686.11251765583
+            },
+            {
+              "timestamp": 1781510544,
+              "value": 179612.01313937118
+            },
+            {
+              "timestamp": 1781510559,
+              "value": 285227.70194956777
+            },
+            {
+              "timestamp": 1781510574,
+              "value": 540670.6493506493
+            },
+            {
+              "timestamp": 1781510589,
+              "value": 795779.437796502
+            },
+            {
+              "timestamp": 1781510604,
+              "value": 1045071.8867851171
+            },
+            {
+              "timestamp": 1781510619,
+              "value": 1123515.881880352
+            },
+            {
+              "timestamp": 1781510634,
+              "value": 699493.2452620104
+            },
+            {
+              "timestamp": 1781510649,
+              "value": 387742.29405184113
+            },
+            {
+              "timestamp": 1781510664,
+              "value": 110427.12647687143
+            },
+            {
+              "timestamp": 1781510679,
+              "value": 208512.51783331032
+            },
+            {
+              "timestamp": 1781510694,
+              "value": 414245.0721852232
+            },
+            {
+              "timestamp": 1781510709,
+              "value": 466518.8660004079
+            },
+            {
+              "timestamp": 1781510724,
+              "value": 295690.1802686274
+            },
+            {
+              "timestamp": 1781510739,
+              "value": 151673.52719464558
+            },
+            {
+              "timestamp": 1781510754,
+              "value": 309243.5128903794
+            },
+            {
+              "timestamp": 1781510769,
+              "value": 409673.95376349386
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "sampleCount": 21,
+        "avg": 362959.5506475622,
+        "p95": 1045071.8867851171,
+        "max": 1123515.881880352,
+        "last": 409673.95376349386
+      }
+    },
+    {
+      "name": "gcP95",
+      "unit": "seconds",
+      "query": "histogram_quantile(0.95, sum(rate(nodejs_gc_duration_seconds_bucket{namespace=\"traffico\",job=\"traffico-api\"}[1m])) by (le))",
+      "status": "ok",
+      "series": [
+        {
+          "labels": {},
+          "values": [
+              {
+                "timestamp": 1781510469,
+                "value": 0.00095
+              },
+              {
+                "timestamp": 1781510484,
+                "value": 0.009325
+              },
+              {
+                "timestamp": 1781510499,
+                "value": 0.004937499999999997
+              },
+              {
+                "timestamp": 1781510514,
+                "value": 0.0009823129251700679
+              },
+              {
+                "timestamp": 1781510529,
+                "value": 0.0009591639871382636
+              },
+              {
+                "timestamp": 1781510544,
+                "value": 0.0009519076305220884
+              },
+              {
+                "timestamp": 1781510559,
+                "value": 0.0009511949685534592
+              },
+              {
+                "timestamp": 1781510574,
+                "value": 0.0009514972419227738
+              },
+              {
+                "timestamp": 1781510589,
+                "value": 0.0009535334750265674
+              },
+              {
+                "timestamp": 1781510604,
+                "value": 0.0009560461416070008
+              },
+              {
+                "timestamp": 1781510619,
+                "value": 0.0009750799999999998
+              },
+              {
+                "timestamp": 1781510634,
+                "value": 0.004493220338983035
+              },
+              {
+                "timestamp": 1781510649,
+                "value": 0.008058076923076925
+              },
+              {
+                "timestamp": 1781510664,
+                "value": 0.009217757009345802
+              },
+              {
+                "timestamp": 1781510679,
+                "value": 0.008985593220338976
+              },
+              {
+                "timestamp": 1781510694,
+                "value": 0.00909196428571429
+              },
+              {
+                "timestamp": 1781510709,
+                "value": 0.009094155844155846
+              },
+              {
+                "timestamp": 1781510724,
+                "value": 0.00906762589928057
+              },
+              {
+                "timestamp": 1781510739,
+                "value": 0.008882258064516126
+              },
+              {
+                "timestamp": 1781510754,
+                "value": 0.008930693069306932
+              },
+              {
+                "timestamp": 1781510769,
+                "value": 0.008879655172413792
+              }
+            ]
+        }
+      ],
+      "summary": {
+        "sampleCount": 21,
+        "avg": 0.0051235350570034525,
+        "p95": 0.009217757009345802,
+        "max": 0.009325,
+        "last": 0.008879655172413792
+      }
+    }
+  ]
+}
