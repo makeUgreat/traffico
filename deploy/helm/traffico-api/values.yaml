@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 8
 image:
   repository: willom2c/traffico-api
   pullPolicy: IfNotPresent
@@ -15,6 +15,7 @@ serviceMonitor:
   interval: 15s
 resources:
   requests:
+    cpu: 1000m
     memory: 512Mi
 nodeSelector: {}
 tolerations: []
