@@ -2,7 +2,7 @@ replicaCount: 8
 image:
   repository: willom2c/traffico-api
   pullPolicy: IfNotPresent
-  tag: "sha-c1d707f4d2f2256d436645dfc4ad9b1b7a17f2a1"
+  tag: "sha-3e3cce459f99d30047bfbf8b852259dc70634d2a"
 service:
   type: ClusterIP
   port: 3000
