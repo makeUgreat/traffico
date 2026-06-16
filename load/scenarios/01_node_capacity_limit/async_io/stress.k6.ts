@@ -2,46 +2,27 @@ import { check } from 'k6';
 import http from 'k6/http';
 import type { Options } from 'k6/options';
 
-import { getEnv } from '../../../common/env.ts';
+import { getEnv, getOptionalEnv } from '../../../common/env.ts';
 import { collectPrometheusResources } from '../../../common/prometheus-resources.ts';
 import { createTestId, getTestId, logTestId } from '../../../common/test-id.ts';
 
 const baseUrl = getEnv('TARGET_BASE_URL');
 const requestTimeout = getEnv('LOAD_REQUEST_TIMEOUT');
-const targetPath = '/node-capacity-limit/baseline';
-const resultsDir = 'load/scenarios/01_node_capacity_limit/tps_ramp/results';
+const asyncIoDelayMs = getOptionalEnv('ASYNC_IO_DELAY_MS', '50');
+const targetPath = `/node-capacity-limit/async-io?delayMs=${asyncIoDelayMs}`;
+const scriptPath =
+  'load/scenarios/01_node_capacity_limit/async_io/stress.k6.ts';
+const resultsDir = 'load/scenarios/01_node_capacity_limit/async_io/results';
 const purpose = 'stress';
 
 export const options: Options = {
   tags: {
     testid: createTestId(),
   },
-  scenarios: {
-    node_max_throughput: {
-      executor: 'ramping-arrival-rate',
-      timeUnit: '1s',
-      preAllocatedVUs: 500,
-      maxVUs: 5000,
-      stages: [
-        { target: 5000, duration: '1m' },
-        { target: 10000, duration: '1m' },
-        { target: 20000, duration: '1m' },
-        { target: 40000, duration: '1m' },
-        { target: 80000, duration: '1m' },
-      ],
-    },
-  },
+  vus: 50,
+  duration: '3m',
   thresholds: {
-    http_req_failed: [
-      {
-        threshold: 'rate<0.01',
-      },
-    ],
-    http_req_duration: [
-      {
-        threshold: 'p(95)<1000',
-      },
-    ],
+    http_req_failed: ['rate<0.01'],
   },
 };
 
@@ -76,8 +57,7 @@ export function handleSummary(data: {
         schemaVersion: 1,
         test: {
           testid,
-          scriptPath:
-            'load/scenarios/01_node_capacity_limit/tps_ramp/stress.k6.ts',
+          scriptPath,
           purpose,
           startedAt: startedAt.toISOString(),
           endedAt: endedAt.toISOString(),
@@ -93,8 +73,7 @@ export function handleSummary(data: {
         schemaVersion: 1,
         test: {
           testid,
-          scriptPath:
-            'load/scenarios/01_node_capacity_limit/tps_ramp/stress.k6.ts',
+          scriptPath,
           purpose,
           startedAt: startedAt.toISOString(),
           endedAt: endedAt.toISOString(),

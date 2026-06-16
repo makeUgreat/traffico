@@ -9,3 +9,13 @@ export function getEnv(name: string): string {
 
   return value;
 }
+
+export function getOptionalEnv(name: string, fallback: string): string {
+  const value = __ENV[name];
+
+  if (value === undefined || value === '') {
+    return fallback;
+  }
+
+  return value;
+}

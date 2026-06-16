@@ -13,7 +13,7 @@ export const options: Options = {
     testid: createTestId(),
   },
   vus: 50,
-  duration: '1m',
+  duration: '3m',
   thresholds: {
     http_req_failed: ['rate<0.01'],
   },

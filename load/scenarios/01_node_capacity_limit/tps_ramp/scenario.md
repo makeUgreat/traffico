@@ -22,19 +22,19 @@
 
 ## Little's Law 예상 수치
 
-- 목표 처리량 `λ`: 기본 최대 20000 req/s
+- 목표 처리량 `λ`: 기본 최대 80000 req/s
 - 목표 평균 응답 시간 `W`: 100 ms = 0.1 s
-- 예상 동시 처리량 `L = λW`: 20000 \* 0.1 = 2000
-- k6 VU 산정 근거: 목표 최대 20000 req/s와 p95 100 ms 기준 이론상 동시성은 약 2000이다. 짧은 시간 동안 Node 자체 처리량 한계 근처를 찾는 목적이므로 pre-allocated VU를 500으로 두고, latency가 상승하는 구간에서도 부하 발생기가 먼저 막히지 않도록 max VU는 5000으로 둔다.
+- 예상 동시 처리량 `L = λW`: 80000 \* 0.1 = 8000
+- k6 VU 산정 근거: 목표 최대 80000 req/s와 p95 100 ms 기준 이론상 동시성은 약 8000이다. 짧은 시간 동안 Node 자체 처리량 한계 근처를 찾는 목적이므로 pre-allocated VU를 500으로 두고, latency가 상승하는 구간에서도 부하 발생기가 먼저 막히지 않도록 max VU는 5000으로 둔다.
 
 ## 트래픽 조건
 
 - executor: `ramping-arrival-rate`
 - 시나리오 이름: `node_max_throughput`
-- rate stages: 1000, 5000, 10000, 15000, 20000 req/s
-- 최대 rate: 20000 req/s
+- rate stages: 20000, 40000, 80000 req/s
+- 최대 rate: 80000 req/s
 - stage duration: 1m
-- 총 실행 시간: 5m
+- 총 실행 시간: 3m
 - time unit: 1s
 - pre-allocated VU: 500
 - max VU: 5000
