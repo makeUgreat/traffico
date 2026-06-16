@@ -10,7 +10,7 @@ Env A-D에서 같은 스크립트를 각각 실행해 CPU request와 Pod 개수 
 
 - `GET /node-capacity-limit/baseline`
 - 기본 대상 주소: `http://localhost:3000`
-- 대상 주소는 `load/.env`의 `TARGET_BASE_URL`로 변경한다.
+- 대상 주소는 `load/.env`의 `TARGET_BASE_URLS`에 쉼표로 구분해 넣는다. URL이 하나여도 이 값을 사용한다.
 - 정상 응답 body는 다른 API와 동일한 `{"status":"ok"}`로 유지한다.
 
 ## 인프라 구성
@@ -29,7 +29,7 @@ Env A-D에서 같은 스크립트를 각각 실행해 CPU request와 Pod 개수 
 
 - 목표 처리량 `λ`: needs measurement
 - 목표 평균 응답 시간 `W`: 100 ms = 0.1 s
-- 예상 동시 처리량 `L = λW`: 측정된 처리량 * 0.1
+- 예상 동시 처리량 `L = λW`: 측정된 처리량 \* 0.1
 - k6 VU 산정 근거: Env A-D와 다른 API를 같은 조건으로 비교하기 위해 기본 50 VU로 시작한다.
 
 ## 트래픽 조건

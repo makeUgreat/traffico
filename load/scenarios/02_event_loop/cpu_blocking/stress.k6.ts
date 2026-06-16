@@ -3,9 +3,9 @@ import http from 'k6/http';
 import type { Options } from 'k6/options';
 
 import { getEnv } from '../../../common/env.ts';
+import { getTargetRequestTags, getTargetUrl } from '../../../common/target.ts';
 import { createTestId, logTestId } from '../../../common/test-id.ts';
 
-const baseUrl = getEnv('TARGET_BASE_URL');
 const requestTimeout = getEnv('LOAD_REQUEST_TIMEOUT');
 
 export const options: Options = {
@@ -26,9 +26,10 @@ export function setup(): void {
 export default function (): void {
   const cpuBlockMs = 50;
   const response = http.get(
-    `${baseUrl}/event-loop/cpu-blocking?ms=${cpuBlockMs}`,
+    getTargetUrl(`/event-loop/cpu-blocking?ms=${cpuBlockMs}`),
     {
       timeout: requestTimeout,
+      tags: getTargetRequestTags(),
     },
   );
 

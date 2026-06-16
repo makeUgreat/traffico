@@ -1,6 +1,6 @@
 import http from 'k6/http';
 
-import { getEnv, getOptionalEnv } from './env.ts';
+import { getEnv } from './env.ts';
 
 type TimeRange = {
   start: Date;
@@ -31,18 +31,11 @@ const step = getEnv('PROMETHEUS_STEP');
 const namespace = getEnv('PROMETHEUS_NAMESPACE');
 const job = getEnv('PROMETHEUS_JOB');
 const podRegex = getEnv('PROMETHEUS_POD_REGEX');
-const loadGeneratorJob = getOptionalEnv(
-  'PROMETHEUS_LOAD_GENERATOR_JOB',
-  'macbook-load-generator',
-);
-const loadGeneratorDeviceRegex = getOptionalEnv(
+const loadGeneratorJob = getEnv('PROMETHEUS_LOAD_GENERATOR_JOB');
+const loadGeneratorDeviceRegex = getEnv(
   'PROMETHEUS_LOAD_GENERATOR_DEVICE_REGEX',
-  'en0|utun.*',
 );
-const nodeExporterJob = getOptionalEnv(
-  'PROMETHEUS_NODE_EXPORTER_JOB',
-  'node-exporter',
-);
+const nodeExporterJob = getEnv('PROMETHEUS_NODE_EXPORTER_JOB');
 
 function queries(testid: string): PrometheusQuery[] {
   const app = `namespace="${namespace}",job="${job}"`;

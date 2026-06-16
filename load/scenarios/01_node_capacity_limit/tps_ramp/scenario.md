@@ -10,7 +10,8 @@
 
 - 기본 대상 API: `GET /node-capacity-limit/baseline`
 - 기본 대상 주소: `http://localhost:3000`
-- 대상 주소는 `load/.env`의 `TARGET_BASE_URL`로 변경한다.
+- 대상 주소는 `load/.env`의 `TARGET_BASE_URLS`에 쉼표로 구분해 넣는다. URL이 하나여도 이 값을 사용한다.
+- k6는 `TARGET_BASE_URLS`를 iteration 단위로 round-robin 분산한다.
 
 ## 인프라 구성
 
@@ -18,6 +19,7 @@
 - 대상 서버: `pnpm start:dev`, `pnpm start`, `pnpm start:prod` 또는 Kubernetes 배포 환경의 traffico 서버
 - Node 런타임: Node v24.15.0 LTS
 - k6 실행기: 로컬 또는 내부망 부하 발생 서버
+- 홈랩에서는 단일 MetalLB VIP가 진정한 L4 로드밸런싱을 제공하지 못하므로, `TARGET_BASE_URLS`로 각 node/ingress endpoint에 부하를 직접 분산한다.
 - 병목 판단 시 같은 시간대의 Node CPU 사용률, event loop lag, 컨테이너 CPU limit/throttling, NIC RX/TX bps, packet drop/retransmit, k6 `dropped_iterations`를 함께 본다.
 
 ## Little's Law 예상 수치
@@ -48,6 +50,7 @@ pnpm load:01_node_capacity_limit:tps_ramp:stress
 ```
 
 실행 설정은 `load/.env`에서 읽는다.
+예: `TARGET_BASE_URLS=http://192.168.219.100:31688,http://192.168.219.101:31688,http://192.168.219.102:31688`
 실행할 때마다 k6 `handleSummary()`가 k6 summary JSON과 Prometheus 리소스 통계 JSON을 함께 저장한다.
 Grafana 필터에 사용할 k6 `testid`는 실행 시 UUID로 자동 생성되며 결과 JSON의 `test.testid`에 기록된다.
 

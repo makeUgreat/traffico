@@ -2,16 +2,14 @@ import { check } from 'k6';
 import http from 'k6/http';
 import type { Options } from 'k6/options';
 
-import { getEnv, getOptionalEnv } from '../../../common/env.ts';
+import { getEnv } from '../../../common/env.ts';
 import { collectPrometheusResources } from '../../../common/prometheus-resources.ts';
+import { getTargetRequestTags, getTargetUrl } from '../../../common/target.ts';
 import { createTestId, getTestId, logTestId } from '../../../common/test-id.ts';
 
-const baseUrl = getEnv('TARGET_BASE_URL');
 const requestTimeout = getEnv('LOAD_REQUEST_TIMEOUT');
-const pbkdf2Iterations = getOptionalEnv('PBKDF2_ITERATIONS', '100000');
-const pbkdf2Keylen = getOptionalEnv('PBKDF2_KEYLEN', '32');
-const pbkdf2Digest = getOptionalEnv('PBKDF2_DIGEST', 'sha256');
-const targetPath = `/node-capacity-limit/async-libuv?iterations=${pbkdf2Iterations}&keylen=${pbkdf2Keylen}&digest=${pbkdf2Digest}`;
+const targetPath =
+  '/node-capacity-limit/async-libuv?iterations=100000&keylen=32&digest=sha256';
 const scriptPath =
   'load/scenarios/01_node_capacity_limit/async_libuv/stress.k6.ts';
 const resultsDir = 'load/scenarios/01_node_capacity_limit/async_libuv/results';
@@ -33,8 +31,9 @@ export function setup(): void {
 }
 
 export default function (): void {
-  const response = http.get(`${baseUrl}${targetPath}`, {
+  const response = http.get(getTargetUrl(targetPath), {
     timeout: requestTimeout,
+    tags: getTargetRequestTags(),
   });
 
   check(response, {

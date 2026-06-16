@@ -8,7 +8,7 @@ CPU blocking 시나리오와 비교할 정상 요청 처리량을 측정한다.
 
 - `GET /event-loop/baseline`
 - 기본 대상 주소: `http://localhost:3000`
-- 대상 주소는 `load/.env`의 `TARGET_BASE_URL`로 변경한다.
+- 대상 주소는 `load/.env`의 `TARGET_BASE_URLS`에 쉼표로 구분해 넣는다. URL이 하나여도 이 값을 사용한다.
 - 정상 응답 body는 CPU blocking API와 동일한 `{"status":"ok"}`로 유지한다.
 
 ## 인프라 구성

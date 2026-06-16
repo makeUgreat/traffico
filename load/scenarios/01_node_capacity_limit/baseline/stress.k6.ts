@@ -4,12 +4,13 @@ import type { Options } from 'k6/options';
 
 import { getEnv } from '../../../common/env.ts';
 import { collectPrometheusResources } from '../../../common/prometheus-resources.ts';
+import { getTargetRequestTags, getTargetUrl } from '../../../common/target.ts';
 import { createTestId, getTestId, logTestId } from '../../../common/test-id.ts';
 
-const baseUrl = getEnv('TARGET_BASE_URL');
 const requestTimeout = getEnv('LOAD_REQUEST_TIMEOUT');
 const targetPath = '/node-capacity-limit/baseline';
-const scriptPath = 'load/scenarios/01_node_capacity_limit/baseline/stress.k6.ts';
+const scriptPath =
+  'load/scenarios/01_node_capacity_limit/baseline/stress.k6.ts';
 const resultsDir = 'load/scenarios/01_node_capacity_limit/baseline/results';
 const purpose = 'stress';
 
@@ -29,8 +30,9 @@ export function setup(): void {
 }
 
 export default function (): void {
-  const response = http.get(`${baseUrl}${targetPath}`, {
+  const response = http.get(getTargetUrl(targetPath), {
     timeout: requestTimeout,
+    tags: getTargetRequestTags(),
   });
 
   check(response, {

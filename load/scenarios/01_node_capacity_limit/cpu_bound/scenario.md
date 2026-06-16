@@ -8,11 +8,10 @@ Env A-D에서 같은 스크립트를 각각 실행해 CPU request와 Pod 개수 
 
 ## 테스트 대상
 
-- `GET /node-capacity-limit/cpu-bound?ms={CPU_BOUND_MS}`
+- `GET /node-capacity-limit/cpu-bound?ms=50`
 - 기본 대상 주소: `http://localhost:3000`
-- 대상 주소는 `load/.env`의 `TARGET_BASE_URL`로 변경한다.
-- `ms`를 생략하면 API 기본값 50 ms를 사용한다.
-- k6 스크립트는 `CPU_BOUND_MS` 환경변수를 사용하고, 없으면 50 ms로 요청한다.
+- 대상 주소는 `load/.env`의 `TARGET_BASE_URLS`에 쉼표로 구분해 넣는다. URL이 하나여도 이 값을 사용한다.
+- k6 스크립트는 CPU 작업 시간을 API 요청 파라미터 `ms=50`으로 직접 지정한다.
 - 정상 응답 body는 baseline과 동일한 `{"status":"ok"}`로 유지한다.
 
 ## 인프라 구성
@@ -31,14 +30,14 @@ Env A-D에서 같은 스크립트를 각각 실행해 CPU request와 Pod 개수 
 
 - 목표 처리량 `λ`: 20 req/s
 - 목표 평균 응답 시간 `W`: 50 ms = 0.05 s
-- 예상 동시 처리량 `L = λW`: 20 * 0.05 = 1
+- 예상 동시 처리량 `L = λW`: 20 \* 0.05 = 1
 - k6 VU 산정 근거: 50 ms CPU 작업이면 단일 이벤트 루프의 이론상 최대 처리량은 약 20 req/s이므로 병목을 충분히 만들기 위해 50 VU로 시작한다.
 
 ## 트래픽 조건
 
 - stress VU: 50
 - stress duration: 3m
-- CPU 작업 시간: `CPU_BOUND_MS`, 기본 50 ms
+- CPU 작업 시간: `ms=50`
 - 각 VU는 `sleep()` 없이 가능한 한 빠르게 반복 요청한다.
 
 ## 실행 명령

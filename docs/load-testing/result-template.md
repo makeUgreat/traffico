@@ -43,7 +43,7 @@ Follow [infrastructure-template.md](infrastructure-template.md) for detailed fie
 
 ### Key Environment Variables
 
-- `TARGET_BASE_URL`: {value}
+- `TARGET_BASE_URLS`: {comma-separated URL list}
 - `LOAD_REQUEST_TIMEOUT`: {value}
 - `{name}`: {value}
 
