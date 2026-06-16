@@ -28,7 +28,7 @@ CPU blocking 시나리오와 비교할 정상 요청 처리량을 측정한다.
 ## 트래픽 조건
 
 - stress VU: 50
-- stress duration: 1m
+- stress duration: 3m
 - stress는 `/event-loop/baseline`을 `sleep()` 없이 가능한 한 빠르게 반복 요청한다.
 
 ## 실행 명령
